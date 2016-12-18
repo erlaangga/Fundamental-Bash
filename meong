@@ -1,0 +1,274 @@
+#!/bin/bash
+
+#membersihkan tampilan layar
+clear
+
+echo "Hello World"
+
+#menampilkan informasi
+echo -n "Waktu system	:"; date
+echo -n "Anda		:"; whoami
+echo -n "Banyak pemakai	:"; who|wc -l
+
+#Environment Variable
+echo "Ini adalah $HOME dari $USER dengan menggunakan $SHELL $PS1 di $PS2";
+
+#Positional Parameter
+echo $1 adalah salah satu $2 populer di $3
+
+#argumen2
+echo "Nama script Anda	: $0";
+echo "Banyak argumen	: $#";
+echo "Argumennya adalah	: $*";
+
+#User Defined Variable
+nama="Abdullah" #pada bash tanda sama dengan ketika mendifinisikan nilai tidak boleh terpisah dari nama variabel maupun nilainya
+kata="Hi $nama, apa kabarmu?" #menyisipkan variabel nama
+echo $kata;
+kata='Hi $nama, apa kabarmu?'
+echo $kata;
+isi=`ls -l`;
+echo Isi dari folder ini $isi
+
+#nyoba caculator
+a=5
+b=10
+
+#memakai let
+let jumlah=$a+$b #operator harus nempel
+echo "Isi jumlah adalah $jumlah";
+#memakai subtitusi
+echo "Isi jumlah adalah $(($a + $b))" #operator ngga harus nempel
+#memakai expr
+echo "Isi Jumlah adalah `expr $a + $b`" #operator ngga boleh nempel kalo operasi
+
+
+#print
+printf "Isi jumlah adalah %d\n" $(($a+$b))
+printf "Isi jumlah float %.2f\n" $(($a+$b))
+printf "Isi jumlah hexadecimal %x \n" $(($a+$b))
+printf "Isi jumlah octal %o \n" $(($a+$b))
+printf "Hai %s\n" $nama
+
+#read
+echo -n "Masukkan nama Anda: "
+read nama
+
+echo "Hei $nama, apa kabar?"
+echo "Tuliskan pesan dan kesanmu"
+read #jika variabel tidak didefinisikan, data akan dimasukkan ke dalam variabel REPLY
+echo "Kata $nama, \"$REPLY\""
+read -d _ kesan #atribut harus setelah sintaks
+echo "Kesannya $kesan"
+read -p "User: " user
+echo -e "Password diatas 10 karakter atau dalam 3 detik diam, program lanjut"
+read -s -n 10 -t 3 echo waktu habis  #-s silent diinvisible -n maks karakter -t waktu
+
+#memberi warna teks pada bash
+echo -e "\033[31m Hello\033[0m"
+echo -e "\033[37mAku cinta kamu\033[0m" #\033[nilaiwarna+m untuk memberi warna
+echo -e "\033[31;1;33m Bash and ANSI color\033[0m"
+
+#mengatur posisi kursor
+echo -e "\033[10;8HAku cinta "
+echo -e "\033[NAKamu"
+echo -e "\033[NBAku"
+echo -e "\033[NCSeharusnya kita sudah menikah"
+echo -e "\033[NDQadarullaah "
+SETMYCOLOR="\033[42;1;37m"
+GOTOXY="\033[6;35H"
+clear
+echo -e "$SETMYCOLOR Anda lihat ini\033[0m"
+echo -e "\033[5;35H pindah"
+echo -e "$SETMYCOLOR$GOTOXY Anda lihat ini pindah\033[0m"
+
+tput cup 6 35 #tpu cup baris kolom baris dihitung seperti array
+echo "Pake tput"
+
+#Test dan operator
+test 5 -gt 4
+echo $? #variabel khusus seperti REPLY
+test 4 -lt 1
+echo $? #0 berarti true dan 1 berarti false
+test -z ""
+echo $?
+test "Aku" == "Kamu" #sama dengan harus terpisah
+echo $?
+test -d meong
+echo $?
+
+#Seleksi
+if [ $# -lt 1 ]; #ngga boleh nempel dengan kurung siku
+then
+echo "Usage : $0 [arg1 arg2 ...]"
+exit 1;
+fi
+
+kunci="bash";
+read -s -p "Password anda: " pass
+if [ $pass == $kunci ]; then echo "Sukses, Anda layak dapat linux"
+else echo "Wah maaf, gagal nih"
+fi
+ echo "MENU HARI INI";
+echo "-------------";
+echo "1. Bakso     ";
+echo "2. Gado-Gado ";
+echo "3. Exit      ";
+read -p "Pilihan anda [1-3] :" pil;
+
+if [ $pil -eq 1 ]; 
+then
+   echo "Banyak mangkuk =";
+   read jum
+   let bayar=jum*1500;
+elif [ $pil -eq 2 ]; 
+then
+   echo "Banyak porsi =";
+   read jum
+   let bayar=jum*2000;
+elif [ $pil -eq 3 ]; 
+then
+   exit 0
+else
+   echo "Sorry, tidak tersedia"
+fi
+
+echo "Harga bayar = Rp. $bayar"
+echo "THX"
+
+echo -n "Masukkan nama binatang :";
+read binatang;
+
+case $binatang in
+    pinguin | ayam | burung ) echo "$binatang berkaki 2"
+                     
+                              ;;
+    onta | kuda | anjing ) echo "$binatang berkaki 4"
+                  
+                  ;;
+    *) echo "$binatang blom didaftarkan"
+                  
+                  ;;
+esac
+
+for angka in 1 2 3 4 5;
+do 
+echo angka=$angka 
+done
+
+for var
+do
+echo $var
+done
+
+
+i=0;
+bil_genap=0;
+bil_ganjil=0;
+
+echo -n "Batas loop :";
+read batas
+
+if [ -z $batas ] || [ $batas -lt 0 ]; then
+  echo "Ops, tidak boleh kosong atau Batas loop  harus >= 0";
+  exit 0;
+fi
+
+while [ $i -le $batas ]; 
+do
+    echo -n "$i,";
+    if [ `expr  $i % 2` -eq 0 ]; then 
+       let bil_genap=$bil_genap+1;
+    else
+       let bil_ganjil=$bil_ganjil+1;
+    fi
+    let i=$i+1;    #counter untuk mencapai batas
+done
+
+echo 
+echo "banyak bilangan genap  = $bil_genap";
+echo "banyak bilangan ganjil = $bil_ganjil";
+
+i=1;
+until [ $i -gt 10 ];
+do
+  echo $i;
+  let i=$i+1
+done
+
+select menu #variabel akan secara otomatis menampilkan pilihan berdasarkan posisi argumen
+do
+  echo "Anda memilih $REPLY yaitu $menu"
+break;
+done
+
+
+#deklarasikan variabel array
+declare -a angka    #declare digunakan untuk mendeklarasikan tipe data variabel secara eksplisit
+
+#clear
+i=0;
+while [ $i -le 4 ];
+do
+let isi=$i*2;
+angka[$i]=$isi;
+let i=$i+1;
+done
+
+#tampilkan semua elemen array
+#dengan indexnya berisi "*" atau "@"
+echo ${angka[*]};  
+
+#destroy array angka (memory yang dipakai dibebaskan kembali)
+unset angka
+
+
+function say_hello() {
+    echo "Hello, apa kbabar"
+}
+
+
+#panggil fungsi 
+say_hello;
+
+#panggil sekali lagi
+say_hello;
+
+
+function say_helo { #ketika mendeklarasikan fungsi nama fungsi harus ada satu spasi dengantanda kurawal 
+  echo "Hello,apa khabar";
+}
+
+balas(){ #kalau tidak menggunakan function tidak boleh menggunakan spasi antara nama fungsi dan kurung kurawal
+  echo "Baik-baik saja";
+  echo "Bagaimana dengan anda ?";
+}
+
+
+#panggil fungsi say_hello
+say_helo;
+
+#panggil fungsi balas
+balas;
+
+function hello {
+if [ -z $1 ]; then echo "Hello, apa kabar Anda?"
+else echo "Hello $1, apa kabar?"
+fi
+}
+
+echo -z Nama Anda: 
+read nama
+hello $nama;
+
+proses(){
+local h=0;
+   echo -e "a didalam fungsi, a=$h";
+}
+
+h=10;
+proses
+echo "a diluar fungsi, a=$h"
+proses $h
+
+
