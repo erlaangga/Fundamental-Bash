@@ -271,4 +271,4 @@ proses
 echo "a diluar fungsi, a=$h"
 proses $h
 
-
+# pemisahan blok program pada bash kurang begitu jelas terkadang menggunakan kurung kurawal dan terkadang menggunakan sintaksnya sendiri
